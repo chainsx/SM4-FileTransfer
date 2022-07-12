@@ -12,12 +12,13 @@
 #include <transfer.h>
 #include <threadpool.h>
 #include <arpa/inet.h>
+#include "gmssl/sm4_file.h"
 
 //0xAF 0xAE -- 传送文件信息
 //0xAF 0xAF -- 传送文件数据
 
 #define     BUF_SIZE        1024
-#define     FILENAME        "foo.zip"
+#define     FILENAME        "foo.ms4"
 #define     PTHREAD_NUM     5
 
 char server_addr[2048];
@@ -30,9 +31,9 @@ static int pthreads = PTHREAD_NUM; //线程数
 int main(int argc, char const *argv[])
 {
     //判断参数
-    if (argc < 3)
+    if (argc < 6)
     {
-        perror("usage:send_file <IPaddress> file1 file2 file3...");
+        perror("usage:client <IPaddress> <key> <iv> <cbc/ctr> file1 file2 file3...");
         exit(1);
     }
     strcpy(server_addr, argv[1]);
@@ -42,7 +43,7 @@ int main(int argc, char const *argv[])
         rm_dir("file");
     }
     mkdir("file",0777);
-    int file_num = 2;
+    int file_num = 5;
     while(file_num < argc) {
         char mv_target_name[2048] = "file/";
         strcat(mv_target_name, argv[file_num]);
@@ -56,6 +57,25 @@ int main(int argc, char const *argv[])
     if (access("file", 0) == 0) {
         rm_dir("file");
     }
+
+    char keyhex[2048];
+    strcpy(keyhex, argv[2]);
+    char ivhex[2048];
+    strcpy(ivhex, argv[3]);
+    char act[10];
+    strcpy(act, "encrypt");
+    char u_mode[10];
+    strcpy(u_mode, argv[4]);
+    char in_data[2048];
+    strcpy(in_data, "foo.zip");
+    char out_data[2048];
+    strcpy(out_data, "foo.ms4");
+    sm4_main(keyhex, ivhex, act, u_mode, in_data, out_data);
+
+    if( remove("foo.zip") == 0 )
+        printf("Removed tmp zip file.");
+    else
+        perror("remove");
 
   pthread_t pthread_;
     pthread_create(&pthread_, NULL, send_fileinfo, NULL);

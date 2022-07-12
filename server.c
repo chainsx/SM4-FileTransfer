@@ -14,6 +14,7 @@
 #include <transfer.h>
 #include "miniz/zip.h"
 #include "filecopy.h"
+#include "gmssl/sm4_file.h"
 
 #define ADDR "127.0.0.1"
 #define PORT 8080
@@ -35,6 +36,25 @@ char *begin_ = NULL;
 
 int main(int argc, char const *argv[])
 {
+    if (argc < 4)
+    {
+        perror("usage:server <key> <iv> <cbc/ctr>");
+        exit(1);
+    }
+
+    char keyhex[2048];
+    strcpy(keyhex, argv[1]);
+    char ivhex[2048];
+    strcpy(ivhex, argv[2]);
+    char act[10];
+    strcpy(act, "decrypt");
+    char u_mode[10];
+    strcpy(u_mode, argv[3]);
+    char in_data[2048];
+    strcpy(in_data, "foo.ms4");
+    char out_data[2048];
+    strcpy(out_data, "foo.zip");
+
     if (access("file", 0) == 0) {
         rm_dir("file");
     }
@@ -95,7 +115,12 @@ int main(int argc, char const *argv[])
                     {
                         if (errno == EAGAIN || errno == EWOULDBLOCK)
                         {
+                            sm4_main(keyhex, ivhex, act, u_mode, in_data, out_data);
                             zip_extract("foo.zip", "file", NULL, NULL);
+                            if( remove("foo.zip") == 0 )
+                                printf("Removed tmp zip file.");
+                            else
+                                perror("remove");
                             printf("haha--\n");
                             break;
                         }
