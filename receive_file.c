@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include "transfer.h"
+#include <transfer.h>
 
 void writefile(int sockfd, FILE *fp);
 

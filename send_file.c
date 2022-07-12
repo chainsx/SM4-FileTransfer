@@ -2,21 +2,46 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libgen.h>
+#include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include "transfer.h"
+#include <transfer.h>
+#include <sys/stat.h>
+#include <filecopy.h>
+#include <zip_walk.h>
 
 void mysendfile(FILE *fp, int sockfd);
 
 int main(int argc, char* argv[])
 {
     //判断参数
-    if (argc <= 3)
+    printf("%d\n", argc);
+    if (argc < 3)
     {
-        perror("usage:send_file <IPaddress> filepath");
+        perror("usage:send_file <IPaddress> file1 file2 file3...");
         exit(1);
+    }
+
+    //打包
+    if (access("file", 0) == 0) {
+        rm_dir("file");
+    }
+    mkdir("file",0777);
+    int file_num = 2;
+    while(file_num < argc) {
+        char mv_target_name[2048] = "file/";
+        strcat(mv_target_name, argv[file_num]);
+        copy_by_block(argv[file_num],mv_target_name);
+        file_num++;
+    }
+    struct zip_t *zip = zip_open("foo.zip", 5, 'w');
+    zip_walk(zip, "file");
+    zip_close(zip);
+
+    if (access("file", 0) == 0) {
+        rm_dir("file");
     }
 
     //创建TCP套接字
@@ -44,9 +69,9 @@ int main(int argc, char* argv[])
         perror("Connect Error");
         exit(1);
     }
-    
+
     //获取文件名
-    char *filename = basename(argv[2]); //文件名
+    char *filename = "foo.zip"; //文件名
     if (filename == NULL)
     {
         perror("Can't get filename");
