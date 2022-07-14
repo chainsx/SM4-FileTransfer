@@ -29,6 +29,7 @@ add_library(filetransfer
         )
 
 add_executable(filetransfer-bin
+        tools/sm4.c
         tools/filetransfer.c
         tools/client.c
         tools/server.c

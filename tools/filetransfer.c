@@ -4,6 +4,7 @@
 
 extern int recv_main(int argc, char **argv);
 extern int send_main(int argc, char **argv);
+extern int sm4_main(int argc, char **argv);
 
 static const char *options =
         "command [options]\n"
@@ -11,7 +12,8 @@ static const char *options =
         "Commands:\n"
         "  help            Print this help message\n"
         "  send            Send Files\n"
-        "  recv            Receive Files\n";
+        "  recv            Receive Files\n"
+        "  sm4             GmSSL SM4 Tool\n";
 
 int main(int argc, char **argv)
 {
@@ -34,6 +36,8 @@ int main(int argc, char **argv)
             return recv_main(argc, argv);
         } else if (!strcmp(*argv, "send")) {
             return send_main(argc, argv);
+        } else if (!strcmp(*argv, "sm4")) {
+            return sm4_main(argc, argv);
 
         } else {
             fprintf(stderr, "%s: illegal option '%s'\n", prog, *argv);

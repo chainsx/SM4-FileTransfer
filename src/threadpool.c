@@ -36,7 +36,7 @@ threadpool_t* threadpool_create(int work_size, int queue_size)
             return NULL;
         }
         set_cpu_pthread(pool->workers[i].threadid, i);
-        printf("create thread id : %d\n", pool->workers[i].threadid);
+        printf("create thread id : %lu\n", pool->workers[i].threadid);
     }
 
     pool->size = pool->head = pool->tail = pool->waitings = 0;
@@ -151,7 +151,7 @@ void* handler(void*arg)
         if(NULL != task){
             task->func(task->data);
         }
-        printf("%d thread size %d \n", pool->size, pthread_self());
+        printf("%d thread size %lu \n", pool->size, pthread_self());
         printf("pool->quit = %d, tasks_is_empty(pool) = %d\n", pool->quit, pool->size);
         if(pool->quit && tasks_is_empty(pool)){
             printf("exit thread\n");
