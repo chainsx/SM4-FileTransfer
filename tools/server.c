@@ -13,8 +13,8 @@
 #include <mmapFile.h>
 #include <transfer.h>
 #include "miniz/zip.h"
-#include "filecopy.h"
-#include "gmssl/sm4_file.h"
+#include <file_utils.h>
+#include <gmssl/sm4_file.h>
 
 #define ADDR "127.0.0.1"
 #define PORT 8080
@@ -34,7 +34,7 @@ static int dataNo = 0;
 char FILENAME[FILENAMESIZE] = {0};
 char *begin_ = NULL;
 
-int main(int argc, char const *argv[])
+int recv_main(int argc, char const *argv[])
 {
     if (argc < 4)
     {
@@ -43,13 +43,13 @@ int main(int argc, char const *argv[])
     }
 
     char keyhex[2048];
-    strcpy(keyhex, argv[1]);
+    strcpy(keyhex, argv[2]);
     char ivhex[2048];
-    strcpy(ivhex, argv[2]);
+    strcpy(ivhex, argv[3]);
     char act[10];
     strcpy(act, "decrypt");
     char u_mode[10];
-    strcpy(u_mode, argv[3]);
+    strcpy(u_mode, argv[4]);
     char in_data[2048];
     strcpy(in_data, "foo.ms4");
     char out_data[2048];

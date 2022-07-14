@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <dirent.h>
-#include <string.h>
-#ifndef FILETRANSFER_FILECOPY_H
-#define FILETRANSFER_FILECOPY_H
+#include "file_utils.h"
 
 void error_quit(const char *msg)
 {
@@ -88,5 +81,3 @@ int copy_by_block(const char *src_file_name, const char *dest_file_name) {//ok
     fclose(fp2);
     return cnt;
 }
-
-#endif //FILETRANSFER_FILECOPY_H

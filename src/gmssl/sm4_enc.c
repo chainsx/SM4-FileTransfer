@@ -49,7 +49,7 @@
 
 #include <gmssl/sm4.h>
 #include <gmssl/endian.h>
-#include "sm4_lcl.h"
+#include "gmssl/sm4_lcl.h"
 
 
 #define L32(x)							\
