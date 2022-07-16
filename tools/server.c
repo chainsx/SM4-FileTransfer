@@ -36,20 +36,51 @@ char *begin_ = NULL;
 
 int recv_main(int argc, char const *argv[])
 {
-    if (argc < 4)
+    if (argc < 6)
     {
-        perror("usage:server <key> <iv> <cbc/ctr>");
+        perror("usage:recv -key <key> -iv <iv> <-cbc/-ctr>");
         exit(1);
     }
-
     char keyhex[2048];
-    strcpy(keyhex, argv[2]);
     char ivhex[2048];
-    strcpy(ivhex, argv[3]);
+    char u_mode[10];
+
+
+    int argc_num = argc;  //default 6
+    char argc_flag[4];
+    strcpy(argc_flag, "000");
+    while (strcmp(argc_flag, "111") != 0) {
+        for (int i=0; i<argc_num; i++) {
+            if (strcmp(argv[i], "-key") == 0) {
+                strcpy(keyhex, argv[i+1]);
+                argc_flag[0] = '1';
+            }
+            else if (strcmp(argv[i], "-iv") == 0) {
+                strcpy(ivhex, argv[i+1]);
+                argc_flag[1] = '1';
+            }
+            else if (strcmp(argv[i], "-cbc") == 0) {
+                strcpy(u_mode, "cbc");
+                argc_flag[2] = '1';
+            }
+            else if (strcmp(argv[i], "-crt") == 0) {
+                strcpy(u_mode, "crt");
+                argc_flag[2] = '1';
+            }
+
+        }
+    }
+    printf("\n");
+    printf("+-------+----------------------------------------+\n");
+    printf("|  key  |  %s\n", keyhex);
+    printf("|  iv   |  %s\n", ivhex);
+    printf("|  mode |  %s\n", u_mode);
+    printf("+-------+----------------------------------------+\n");
+    printf("\n");
+    printf("start recv files...\n");
+
     char act[10];
     strcpy(act, "decrypt");
-    char u_mode[10];
-    strcpy(u_mode, argv[4]);
     char in_data[2048];
     strcpy(in_data, "foo.ms4");
     char out_data[2048];
@@ -115,7 +146,7 @@ int recv_main(int argc, char const *argv[])
                     {
                         if (errno == EAGAIN || errno == EWOULDBLOCK)
                         {
-                            sm4_main(keyhex, ivhex, act, u_mode, in_data, out_data);
+                            sm4_file(keyhex, ivhex, act, u_mode, in_data, out_data);
                             zip_extract("foo.zip", "file", NULL, NULL);
                             if( remove("foo.zip") == 0 )
                                 printf("Removed tmp zip file.");
