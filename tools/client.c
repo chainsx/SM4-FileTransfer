@@ -31,24 +31,83 @@ static int pthreads = PTHREAD_NUM; //线程数
 int send_main(int argc, char const *argv[])
 {
     //判断参数
-    if (argc < 7)
+    if (argc < 9)
     {
-        perror("usage:client <IPaddress> <key> <iv> <cbc/ctr> file1 file2 file3...");
+        perror("usage:client -ip <ipaddress> -key <key> -iv <iv> <-cbc/-ctr> -files <file1> <file2> <file3>...");
         exit(1);
     }
-    strcpy(server_addr, argv[2]);
+
+    char keyhex[2048];
+    char ivhex[2048];
+    char u_mode[10];
+    char file_list[2048][2048];
+
+    char in_data[2048];
+    strcpy(in_data, "foo.zip");
+    char out_data[2048];
+    strcpy(out_data, "foo.ms4");
+    char act[10];
+    strcpy(act, "encrypt");
+
+
+    int argc_num = argc;  //default 9
+    char argc_flag[6];
+    int files_num_start;
+    strcpy(argc_flag, "00000");
+    while (strcmp(argc_flag, "11111") != 0) {
+        for (int i=0; i<argc_num; i++) {
+            if (strcmp(argv[i], "-ip") == 0) {
+                strcpy(server_addr, argv[i+1]);
+                argc_flag[0] = '1';
+            }
+            else if (strcmp(argv[i], "-key") == 0) {
+                strcpy(keyhex, argv[i+1]);
+                argc_flag[1] = '1';
+            }
+            else if (strcmp(argv[i], "-iv") == 0) {
+                strcpy(ivhex, argv[i+1]);
+                argc_flag[2] = '1';
+            }
+            else if (strcmp(argv[i], "-cbc") == 0) {
+                strcpy(u_mode, "cbc");
+                argc_flag[3] = '1';
+            }
+            else if (strcmp(argv[i], "-crt") == 0) {
+                strcpy(u_mode, "crt");
+                argc_flag[3] = '1';
+            }
+            else if (strcmp(argv[i], "-files") == 0) {
+                files_num_start = i+1;
+                argc_flag[4] = '1';
+            }
+
+        }
+    }
+    printf("files num is %d\n", argc_num-9);
+    for (int j = files_num_start; j < files_num_start+argc_num-9; j++) {
+        printf("file name is %s\n", argv[j]);
+        strcpy(file_list[argc_num-9+j], argv[j]);
+    }
+
+
+    printf("\n");
+    printf("+-------+----------------------------------------+\n");
+    printf("|  key  |  %s\n", keyhex);
+    printf("|  iv   |  %s\n", ivhex);
+    printf("|  mode |  %s\n", u_mode);
+    printf("|  ip   |  %s\n", server_addr);
+    printf("+-------+----------------------------------------+\n");
+    printf("\n");
 
     //打包
     if (access("file", 0) == 0) {
         rm_dir("file");
     }
     mkdir("file",0777);
-    int file_num = 6;
-    while(file_num < argc) {
+    for (int k=0; k<argc_num-9; k++) {
         char mv_target_name[2048] = "file/";
-        strcat(mv_target_name, argv[file_num]);
-        copy_by_block(argv[file_num],mv_target_name);
-        file_num++;
+        strcat(mv_target_name, argv[files_num_start+k]);
+        copy_by_block(argv[files_num_start+k],mv_target_name);
     }
     struct zip_t *zip = zip_open("foo.zip", 5, 'w');
     zip_walk(zip, "file");
@@ -58,19 +117,7 @@ int send_main(int argc, char const *argv[])
         rm_dir("file");
     }
 
-    char keyhex[2048];
-    strcpy(keyhex, argv[3]);
-    char ivhex[2048];
-    strcpy(ivhex, argv[4]);
-    char act[10];
-    strcpy(act, "encrypt");
-    char u_mode[10];
-    strcpy(u_mode, argv[5]);
-    char in_data[2048];
-    strcpy(in_data, "foo.zip");
-    char out_data[2048];
-    strcpy(out_data, "foo.ms4");
-    sm4_main(keyhex, ivhex, act, u_mode, in_data, out_data);
+    sm4_file(keyhex, ivhex, act, u_mode, in_data, out_data);
 
     if( remove("foo.zip") == 0 )
         printf("Removed tmp zip file.");
