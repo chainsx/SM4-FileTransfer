@@ -60,7 +60,7 @@
 
 static const char *options = "{-cbc|-ctr} {-encrypt|-decrypt} -key hex -iv hex [-in file] [-out file]";
 
-int sm4_main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     int ret = 1;
 	char *prog = argv[0];

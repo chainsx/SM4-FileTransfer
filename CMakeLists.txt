@@ -10,11 +10,12 @@ set(CMAKE_C_STANDARD 99)
 include_directories(include)
 
 add_library(filetransfer
+        src/messages.c
+        src/connect.c
+        src/get.c
+        src/send.c
         src/sm4_file.c
         src/file_utils.c
-        src/mmapFile.c
-        src/threadpool.c
-        src/transfer.c
         src/miniz/zip.c
         src/gmssl/sm4_common.c
         src/gmssl/sm4_enc.c
@@ -29,10 +30,7 @@ add_library(filetransfer
         )
 
 add_executable(filetransfer-bin
-        tools/sm4.c
         tools/filetransfer.c
-        tools/client.c
-        tools/server.c
         )
 
 target_link_libraries (filetransfer-bin LINK_PUBLIC filetransfer)
