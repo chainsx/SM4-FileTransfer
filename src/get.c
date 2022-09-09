@@ -43,7 +43,7 @@ int getFile(int socket, const char *path)
      if ((f = fopen(filepath, "wb")) == NULL)
         tool_error("Can not create file");
 
-    printf("* [%s] retrieving ... (Size: %d Kb)\n\n", filename, filesize);
+    printf("* download retrieving ... (Size: %d Kb)\n\n", filesize);
 
     while ((result_read = read_socket(socket, buf, BUFSIZE)) != -1) {
         int n, k;

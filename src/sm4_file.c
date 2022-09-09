@@ -1,7 +1,7 @@
 #include "gmssl/sm4_file.h"
 int sm4_file(char *u_key, char *u_iv, char *act, char *u_mode, char *in_data, char *out_data)
 {
-    int ret;
+    int ret = 0;
     char *keyhex = NULL;
     char *ivhex = NULL;
     char *infile = NULL;

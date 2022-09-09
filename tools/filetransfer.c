@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     int socket;
     int check_send = 0;
     int check_get = 0;
-    char *ipaddr;
+    char *ipaddr = NULL;
     char *keyhex = NULL;
     char *ivhex = NULL;
     char *mode = NULL;
@@ -72,21 +72,22 @@ int main(int argc, char *argv[]) {
     printf("|  iv   |  %s\n", ivhex);
     printf("|  mode |  %s\n", mode);
     printf("|  ip   |  %s\n", ipaddr);
+    printf("|  argc |  %d\n", argc);
     printf("+-------+----------------------------------------+\n");
     printf("\n");
 
     if (check_send) {
-        if (argc <= 10)
+        if (argc < 10)
         {
             usage();
         }
-        printf("%d\n", argc);
 
         if (access("file", 0) == 0) {
             rm_dir("file");
         }
         mkdir("file",0777);
-        for (int k=0; k<argc_num-11; k++) {
+        for (int k=0; k<argc_num-9; k++) {
+            printf("processing %s\n", argv[files_num_start+k]);
             char mv_target_name[2048] = "file/";
             strcat(mv_target_name, argv[files_num_start+k]);
             copy_by_block(argv[files_num_start+k],mv_target_name);
@@ -103,12 +104,12 @@ int main(int argc, char *argv[]) {
         strcpy(out_data, "foo.ms4");
         strcpy(act, "encrypt");
         sm4_file(keyhex, ivhex, act, mode, in_data, out_data);
-        remove("foo.zip");
+        //remove("foo.zip");
 
         socket = connectForSend();
         sendFile(socket, "foo.ms4");
         closeConnect(socket);
-        remove("foo.ms4");
+        //remove("foo.ms4");
     }
 
     if (check_get) {
@@ -127,9 +128,9 @@ int main(int argc, char *argv[]) {
         socket = connectForGet(ipaddr);
         getFile(socket, "foo.ms4");
         sm4_file(keyhex, ivhex, act, mode, in_data, out_data);
-        remove("foo.ms4");
+        //remove("foo.ms4");
         zip_extract("foo.zip", ".", NULL, NULL);
-        remove("foo.zip");
+        //remove("foo.zip");
         closeConnect(socket);
     }
 
@@ -139,7 +140,7 @@ int main(int argc, char *argv[]) {
 void usage(void)
 {
     printf("\nFilertransfer v%s (Usage)\n"
-           "Send a file  : filetransfer -send -key <key> -iv <iv> -mode <cbc/crt> -l <filepath>\n"
+           "Send a file  : filetransfer -send -key <key> -iv <iv> -mode <cbc/crt> -files <filepath>\n"
            "Get a file   : filetransfer -get -ip <ipaddr> -key <key> -iv <iv> -mode <cbc/crt>\n"
            "Help         : filetransfer -help\n\n", VERSION);
 

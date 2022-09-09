@@ -1,50 +1,12 @@
 /*
- * Copyright (c) 2014 - 2021 The GmSSL Project.  All rights reserved.
+ *  Copyright 2014-2022 The GmSSL Project. All Rights Reserved.
  *
-OCSPSigning * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
+ *  Licensed under the Apache License, Version 2.0 (the License); you may
+ *  not use this file except in compliance with the License.
  *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. All advertising materials mentioning features or use of this
- *    software must display the following acknowledgment:
- *    "This product includes software developed by the GmSSL Project.
- *    (http://gmssl.org/)"
- *
- * 4. The name "GmSSL Project" must not be used to endorse or promote
- *    products derived from this software without prior written
- *    permission. For written permission, please contact
- *    guanzhi1980@gmail.com.
- *
- * 5. Products derived from this software may not be called "GmSSL"
- *    nor may "GmSSL" appear in their names without prior written
- *    permission of the GmSSL Project.
- *
- * 6. Redistributions of any form whatsoever must retain the following
- *    acknowledgment:
- *    "This product includes software developed by the GmSSL Project
- *    (http://gmssl.org/)"
- *
- * THIS SOFTWARE IS PROVIDED BY THE GmSSL PROJECT ``AS IS'' AND ANY
- * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE GmSSL PROJECT OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *  http://www.apache.org/licenses/LICENSE-2.0
  */
+
 
 
 #ifndef GMSSL_OID_H
@@ -210,14 +172,22 @@ enum {
 	OID_cms_key_agreement_info,
 };
 
+// {iso(1) org(3) dod(6) internet(1) security(5) mechanisms(5) pkix(7)}
+#define oid_pkix	1,3,6,1,5,5,7
 
+#define oid_pe		oid_pkix,1
+#define oid_qt		oid_pkix,2
+#define oid_kp		oid_pkix,3
+#define oid_ad		oid_pkix,48
 
-#define oid_pkix 1,3,6,1,5,5,7
+// {iso(1) member-body(2) us(840) rsadsi(113549)}
+#define oid_rsadsi	1,2,840,113549
+#define oid_pkcs	oid_rsadsi,1
+#define oid_pkcs5	oid_pkcs,5
 
-#define oid_pe	oid_pkix,1
-#define oid_qt	oid_pkix,2
-#define oid_kp	oid_pkix,3
-#define oid_ad	oid_pkix,48
+// {iso(1) member-body(2) us(840) ansi-x962(10045)}
+#define oid_x9_62	1,2,840,10045
+
 
 
 #define oid_at	2,5,4
@@ -226,27 +196,15 @@ enum {
 
 #define oid_sm		1,2,156,10197
 #define oid_sm_algors	oid_sm,1
+#define oid_sm2_cms	oid_sm,6,1,4,2
 
 
-#define oid_sm2_cms 1,2,156,10197,6,1,4,2
 
-/*
-rsadsi OBJECT IDENTIFIER ::= {iso(1) member-body(2) us(840) 113549}
-pkcs OBJECT IDENTIFIER   ::= {rsadsi 1}
-pkcs-5 OBJECT IDENTIFIER ::= {pkcs 5}
-id-PBKDF2 OBJECT IDENTIFIER ::= {pkcs-5 12}
-id-PBES2 OBJECT IDENTIFIER ::= {pkcs-5 13}
-*/
-
-#define oid_rsadsi	1,2,840,113549
-#define oid_pkcs	oid_rsadsi,1
-#define oid_pkcs5	oid_pkcs,5
 
 
 #define oid_cnt(nodes)	(sizeof(nodes)/sizeof(int))
 
 
-#define oid_x9_62 1,2,840,10045
 
 
 #ifdef __cplusplus

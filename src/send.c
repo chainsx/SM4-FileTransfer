@@ -45,7 +45,7 @@ int sendFile(int socket, const char *path)
     filesize = ftell(f) / 1024;
     fseek(f, 0, SEEK_SET);
 
-    printf("* [%s] file is being sent...(Size: %d Kb)\n\n", filename, filesize);
+    printf("* upload file is being sent...(Size: %d Kb)\n\n", filesize);
 
     if (send(socket, filename, FILENAMELEN, 0) == SOCKET_ERROR)
         tool_error("Failed to send file properties");
