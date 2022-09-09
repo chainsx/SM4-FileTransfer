@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     printf("\n");
 
     if (check_send) {
-        if (argc <= 11)
+        if (argc <= 10)
         {
             usage();
         }

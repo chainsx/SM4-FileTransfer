@@ -35,13 +35,13 @@ int getFile(int socket, const char *path)
     char filepath[FILEPATHLEN];
 
     if (recv(socket, filename, FILENAMELEN, 0) == SOCKET_ERROR)
-        bumerang_error("Failed to get file properties");
+        tool_error("Failed to get file properties");
     recv(socket, &filesize, sizeof(int), 0);
 
     strcpy(filepath, path);
 
      if ((f = fopen(filepath, "wb")) == NULL)
-        bumerang_error("Can not create file");
+        tool_error("Can not create file");
 
     printf("* [%s] retrieving ... (Size: %d Kb)\n\n", filename, filesize);
 
@@ -64,15 +64,15 @@ int getFile(int socket, const char *path)
     }
 
     if (result_read == -1)
-        bumerang_error("File download failed");
+        tool_error("File download failed");
 
     fseek(f, 0, SEEK_END);
     filesize_check = ftell(f) / 1024;
 
     if (filesize == filesize_check)
-        bumerang_info("File downloaded");
+        tool_info("File downloaded");
     else
-        bumerang_error("File transfer was not completed");
+        tool_error("File transfer was not completed");
 
     fclose(f);
 

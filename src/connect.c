@@ -54,7 +54,7 @@ int connectForSend(void)
         socklen_t addr_len; 
     #endif
 
-    bumerang_info("Trying to connection");
+    tool_info("Trying to connection");
 
     #ifdef OS_WIN
         getIpAddressForNT(ipaddr);
@@ -80,8 +80,8 @@ int connectForSend(void)
     if (listen(servfd, BACKLOG) == SOCKET_ERROR)
         connectError("listen");
 
-    bumerang_info("Connection successfull");
-    bumerang_info("Waiting the client");
+    tool_info("Connection successfull");
+    tool_info("Waiting the client");
 
     addr_len = sizeof (clientaddr);
     if ((clientfd = accept(servfd, (struct sockaddr *) &clientaddr, &addr_len)) == SOCKET_ERROR)
@@ -106,7 +106,7 @@ int connectForGet(const char *ipaddr)
     memset(&servaddr.sin_zero, '\0', 8);
     servaddr.sin_addr.s_addr = inet_addr(ipaddr);
 
-    bumerang_info("Trying to connection");
+    tool_info("Trying to connection");
 
     if ((servfd = socket(AF_INET, SOCK_STREAM, 0)) == SOCKET_ERROR)
         connectError("socket");
@@ -114,8 +114,8 @@ int connectForGet(const char *ipaddr)
     if (connect(servfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) == SOCKET_ERROR)
         connectError("connect");
 
-    bumerang_info("Connection successfull");
-    bumerang_info("Waiting the file");
+    tool_info("Connection successfull");
+    tool_info("Waiting the file");
 
     return servfd;
 }

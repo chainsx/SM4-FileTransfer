@@ -34,7 +34,7 @@ int sendFile(int socket, const char *path)
     int sum = 0;
 
     if ((f = fopen(path, "rb")) == NULL)
-        bumerang_error("The file could not be read");
+        tool_error("The file could not be read");
 
     if (strrchr(path, '/'))
         sprintf(filename, "%s", strrchr(path, '/') + 1);
@@ -48,7 +48,7 @@ int sendFile(int socket, const char *path)
     printf("* [%s] file is being sent...(Size: %d Kb)\n\n", filename, filesize);
 
     if (send(socket, filename, FILENAMELEN, 0) == SOCKET_ERROR)
-        bumerang_error("Failed to send file properties");
+        tool_error("Failed to send file properties");
     send(socket, &filesize, 4, 0);
 
     while ((result_read = fread(buf, 1, BUFSIZE, f))) {
@@ -67,9 +67,9 @@ int sendFile(int socket, const char *path)
     }
 
     if (filesize == sum / 1024)
-        bumerang_info("File sent");
+        tool_info("File sent");
     else
-        bumerang_error("File transfer was not completed");
+        tool_error("File transfer was not completed");
 
     fclose(f);
 
